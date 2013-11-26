@@ -1,5 +1,7 @@
 package frogger;
 
+import java.awt.Graphics;
+
 public abstract class Sprite {
 	
 	int x;
@@ -8,6 +10,6 @@ public abstract class Sprite {
 	int dy;
 	
 	abstract void update();
-    abstract void draw();
+    abstract void draw(Graphics g);
 	
 }

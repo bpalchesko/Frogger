@@ -5,14 +5,14 @@ package frogger;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Graphics;
-
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
 public class Frogger extends JFrame{
+	
+	private static final long serialVersionUID = 1L;
 	
 	int level;
 	int crossings;
@@ -22,6 +22,7 @@ public class Frogger extends JFrame{
 	JLabel livesLeft;
 	JLabel directions;
 	Background background;
+	View view;
 	JPanel topBar;
 	JPanel bottomBar;
 	
@@ -31,16 +32,29 @@ public class Frogger extends JFrame{
 	}
 	
 	public static void main(String[] args) {
-		new Frogger().createGame();
+		//new Frogger().createGame();
+		Frogger frogger = new Frogger();
+		frogger.createGame();
+		frogger.runGame();
+		//frogger.updateGame();
 	}
+	
+	void runGame() {
+		this.setVisible(true);
+		//this.background.repaint();
+	}
+	
+//	void updateGame() {
+//		this.lives--;
+//		livesLeft.setText("Frog lives: " + lives);
+//		repaint();
+//	}
 	
 	void createGame() {
 		setSize(700, 600);
 		setResizable(false);
-		setVisible(true);
-		setLayout(new BorderLayout());	
-		
-		addBackground();
+		setLayout(new BorderLayout());
+		addView();
 		addLevelNumber();
 		addFrogCrossings();
 		addLivesLeft();
@@ -49,11 +63,17 @@ public class Frogger extends JFrame{
 		addBottomBar();	
 	}
 	
-	void addBackground() {
-		background = new Background();
-		background.setPreferredSize(new Dimension(700, 600));
-		add(background, BorderLayout.CENTER);
+	void addView() {
+		view = new View();
+		view.setPreferredSize(new Dimension(700, 600));
+		add(view, BorderLayout.CENTER);
 	}
+	
+//	void addBackground() {
+//		background = new Background();
+//		background.setPreferredSize(new Dimension(700, 600));
+//		add(background, BorderLayout.CENTER);
+//	}
 	
 	void addTopBar(){
 		topBar = new JPanel();

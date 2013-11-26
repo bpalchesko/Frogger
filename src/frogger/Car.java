@@ -1,5 +1,7 @@
 package frogger;
 
+import java.awt.Graphics;
+
 public class Car extends Sprite {
 
 	public Car() {
@@ -13,5 +15,5 @@ public class Car extends Sprite {
 	void update() {};
 
 	@Override
-	void draw() {};
+	void draw(Graphics g) {};
 }
