@@ -12,20 +12,22 @@ public class Frog extends Sprite {
 	Image frogDownImage;
 	Image frogLeftImage;
 	Image frogRightImage;
+	Image frogSplatImage;
 	Image frogImage;
 	
 	public Frog() {
-		this.x = 350;
-		this.y = 260;
-		this.dx = 0;
-		this.dy = 0;
-		this.alive = true;
-		this.orientation = Orientation.LEFT;
-		this.frogUpImage = View.loadImage("frog-up.png");
-		this.frogDownImage = View.loadImage("frog-down.png");
-		this.frogLeftImage = View.loadImage("frog-left.png");
-		this.frogRightImage = View.loadImage("frog-right.png");
-		this.frogImage = selectFrogImage(orientation);
+		x = 350;
+		y = 300;
+		dx = 0;
+		dy = 0;
+		alive = true;
+		orientation = Orientation.UP;
+		frogUpImage = View.loadImage("frog-up.png");
+		frogDownImage = View.loadImage("frog-down.png");
+		frogLeftImage = View.loadImage("frog-left.png");
+		frogRightImage = View.loadImage("frog-right.png");
+		frogSplatImage = View.loadImage("splat.gif");
+		frogImage = selectFrogImage(orientation);
 	}
 	
 	Image selectFrogImage(Orientation orientation) {
@@ -44,11 +46,14 @@ public class Frog extends Sprite {
 			frogImage = frogRightImage;
 			break;
 		}
+		if (!alive) frogImage = frogSplatImage; 
 		return frogImage;
 	}
 	
 	@Override
-	void update() {};
+	void update() {
+		frogImage = selectFrogImage(orientation);
+	};
 
 	@Override
 	void draw(Graphics g) {
