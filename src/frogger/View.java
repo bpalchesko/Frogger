@@ -14,19 +14,11 @@ public class View extends JPanel {
 	Background background;
 	Frog frog;
 	Cast cast;
-	Car car0;
-	Car car1;
-	Car car2;
-	Car car3;
 
 	public View() {
 		background = new Background();
 		frog = new Frog();
 		cast = new Cast();
-//		this.car0 = new Car(0, frogger);
-//		this.car1 = new Car(1, frogger);
-//		this.car2 = new Car(2, frogger);
-//		this.car3 = new Car(3, frogger);
 	}
 
 	static Image loadImage(String fileName) {
@@ -42,15 +34,15 @@ public class View extends JPanel {
 	@Override
 	public void paint(Graphics g) {
 		background.draw(g);
+		for (Sprite sprite: cast.castList) {
+			if(sprite instanceof Splat)
+			sprite.draw(g);
+		}	
 		frog.draw(g);
 		for (Sprite sprite: cast.castList) {
+			if(sprite instanceof Car)
 			sprite.draw(g);
 		}
-//		car0.draw(g);
-//		car1.draw(g);
-//		car2.draw(g);
-//		car3.draw(g);
-		
 	}
 
 }

@@ -13,7 +13,7 @@ public class Car extends Sprite {
 	public Car(Frogger frogger) {
 		Random generator = new Random();
 		color = generator.nextInt(6);
-		lane = generator.nextInt(4);
+		lane = generator.nextInt(2);
 		placeCarInLane(lane, color, frogger);
 //		dx = 0;
 		dy = 0;
@@ -32,29 +32,29 @@ public class Car extends Sprite {
 	void placeCarInLane(int lane, int color, Frogger frogger) {
 		switch (lane) {
 		case 0:
-			y = 125;
+			y = 150;
 			x = 775;
 			dx = -2*frogger.level;
 			carImage = View.loadImage(selectCarColor(color) + "-car-left.png");
 			break;
 		case 1:
-			y = 170;
-			x = 775;
-			dx = -2*frogger.level;
-			carImage = View.loadImage(selectCarColor(color) + "-car-left.png");
-			break;
-		case 2:
-			y = 211;
+			y = 225;
 			x = -75;
 			dx = 2*frogger.level;
 			carImage = View.loadImage(selectCarColor(color) + "-car-right.png");
 			break;
-		case 3:
-			y = 254;
-			x = -75;
-			dx = 2*frogger.level;
-			carImage = View.loadImage(selectCarColor(color) + "-car-right.png");
-			break;
+//		case 2:
+//			y = 211;
+//			x = -75;
+//			dx = 2*frogger.level;
+//			carImage = View.loadImage(selectCarColor(color) + "-car-right.png");
+//			break;
+//		case 3:
+//			y = 254;
+//			x = -75;
+//			dx = 2*frogger.level;
+//			carImage = View.loadImage(selectCarColor(color) + "-car-right.png");
+//			break;
 		}
 	}
 

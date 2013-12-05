@@ -24,6 +24,7 @@ public class Frogger extends JFrame{
 	int level;
 	int crossings;
 	int lives;
+	boolean paused;
 	JLabel levelNumber;
 	JLabel frogCrossings;
 	JLabel livesLeft;
@@ -33,102 +34,125 @@ public class Frogger extends JFrame{
 	JPanel topBar;
 	JPanel bottomBar;
 	Timer timer;
-	Cast cast;
+	CarCreator carCreator;
 	
 	public Frogger() {
+		carCreator = new CarCreator(this);
 		level = 1;
 		lives = 3;
+		paused = true;
 	}
 	
 	public static void main(String[] args) {
-		//new Frogger().createGame();
 		Frogger frogger = new Frogger();
 		frogger.createGame();
 		frogger.runGame();
-		//frogger.updateGame();
 	}
 	
 	void runGame() {
 		setVisible(true);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
+		view.cast = new Cast();
+		startLevel(view.cast);
+//		timer = new Timer();
+//		timer.schedule(new Strobe(), 0, 40); 
+//		timer.schedule(carCreator, 0, 1800);
 		
-	    addKeyListener(new KeyListener() {
-	        @Override
-	        public void keyPressed(KeyEvent e) {
-	            if(e.getKeyCode() == KeyEvent.VK_UP) {
-	            	view.frog.orientation = Orientation.UP;
-	                view.frog.y -= 42;
-	            }
-	            if(e.getKeyCode() == KeyEvent.VK_DOWN) {
-	            	view.frog.orientation = Orientation.DOWN;
-	            	view.frog.y += 42;
-	            }
-	            if(e.getKeyCode() == KeyEvent.VK_LEFT) {
-	            	view.frog.orientation = Orientation.LEFT;
-	            	view.frog.x -= 35;
-	            }
-	            if(e.getKeyCode() == KeyEvent.VK_RIGHT) {
-	            	view.frog.orientation = Orientation.RIGHT;
-	            	view.frog.x += 35;
-	            }
-	            view.frog.update();
-	            repaint();
-	        }
+		addKeyListener(new KeyListener() {
+			@Override
+			public void keyPressed(KeyEvent e) {
+				System.out.println(e.getKeyCode());
+				if (e.getKeyCode() == KeyEvent.VK_UP && !paused) {
+					view.frog.orientation = Orientation.UP;
+					if (view.frog.y > 110) view.frog.y -= 34;
+					System.out.println(carCreator);
+				}
+				if (e.getKeyCode() == KeyEvent.VK_UP && paused) {
+					System.out.println("paused");
+					System.out.println(paused);
+				}
+				if (e.getKeyCode() == KeyEvent.VK_DOWN && !paused) {
+					view.frog.orientation = Orientation.DOWN;
+					if (view.frog.y < 280) view.frog.y += 34;
+				}
+				if (e.getKeyCode() == KeyEvent.VK_LEFT && !paused) {
+					view.frog.orientation = Orientation.LEFT;
+					if (view.frog.x > 23) view.frog.x -= 35;
+				}
+				if (e.getKeyCode() == KeyEvent.VK_RIGHT && !paused) {
+					view.frog.orientation = Orientation.RIGHT;
+					if (view.frog.x < 665) view.frog.x += 35;
+				}
+				if (e.getKeyCode() == 'P') {
+					if(paused) resume();
+					else pause();
+				}
+				view.frog.update();
+			}
 
 	        @Override
 	        public void keyReleased(KeyEvent e) {
-	            System.out.println("Released key " + e.getKeyCode());
 	        }
 
 	        @Override
 	        public void keyTyped(KeyEvent e) {
-	            System.out.println("Typed key " + e.getKeyChar());
 	        }
 	    });
-	    
-		cast = new Cast();
-		startLevel(cast);
-		timer = new Timer(true);
-		timer.schedule(new Strobe(), 0, 40); 
-		timer.schedule(new CarCreator(), 0, 1800);
-		//timer.scheduleAtFixedRate(strobe, 3000, 3000);
-		//this.background.repaint();
 	}
 	  
 	private class Strobe extends TimerTask {
-	     public void run() {           
-//	     model.setLimits(view.getWidth(), view.getHeight());        
+	     public void run() {                
 	     updateGame();        
 	     }    
 	}
 	
 	private class CarCreator extends TimerTask {
-	     public void run() {           
-	    	 addCar(cast);
-	     }    
+		Frogger frogger;
+
+		CarCreator(Frogger frogger) {
+			this.frogger = frogger;
+		}
+
+		public void run() {
+			view.cast.addCar(frogger);
+			//view.cast.removeCar(frogger);
+		}
+	}
+	
+	public void pause() {
+		paused = true;
+	    timer.cancel();
+	    System.out.println(paused);
+	    directions.setText("Press P to Resume");
+	}
+	
+	public void resume() {
+		paused = false;
+	    timer = new Timer();
+	    timer.schedule(new Strobe(), 0, 40); 
+	    carCreator = new CarCreator(this);
+		timer.schedule(carCreator, 1800, 1800);
+		directions.setText("Press P to Pause");
 	}
 	
 	void startLevel(Cast cast) {
 		for(int i=0; i<4; i++) {
 		    view.cast.castList.add(new Car(i,this));
-		    System.out.println(cast.castList.size());
+		    //System.out.println(cast.castList.size());
 		}
 	}
-	
-	void addCar(Cast cast) {
-		 view.cast.castList.add(new Car(this));
-	}
-	
+		
 	void updateGame() {
-//		view.car0.update();
-//		view.car1.update();
-//		view.car2.update();
-//		view.car3.update();
 		for(Sprite sprite: view.cast.castList) {
 		    sprite.update();
-		    System.out.println(sprite.x);
+		    //System.out.println(sprite.x);
 		}
-		lives--;
+		//System.out.println("Sprites" + view.cast.castList.size());
+	    if(view.cast.checkForCollision(view)) {
+	    	view.cast.castList.add(new Splat(view.frog.x+5, view.frog.y+5));
+	    	view.frog = new Frog();
+	    	lives--;
+	    }
 		livesLeft.setText("Frog lives: " + lives);
 		view.repaint();
 	}
@@ -151,12 +175,6 @@ public class Frogger extends JFrame{
 		view.setPreferredSize(new Dimension(700, 600));
 		add(view, BorderLayout.CENTER);
 	}
-	
-//	void addBackground() {
-//		background = new Background();
-//		background.setPreferredSize(new Dimension(700, 600));
-//		add(background, BorderLayout.CENTER);
-//	}
 	
 	void addTopBar(){
 		topBar = new JPanel();
@@ -206,7 +224,4 @@ public class Frogger extends JFrame{
 		directions.setForeground(Color.white);	
 	}
 	
-
-	
-
 }

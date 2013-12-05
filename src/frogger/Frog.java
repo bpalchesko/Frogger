@@ -17,7 +17,7 @@ public class Frog extends Sprite {
 	
 	public Frog() {
 		x = 350;
-		y = 300;
+		y = 280;
 		dx = 0;
 		dy = 0;
 		alive = true;
