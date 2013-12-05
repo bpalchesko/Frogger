@@ -4,6 +4,7 @@ import java.awt.*;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
+
 import java.io.File;
 import java.io.IOException;
 
@@ -12,12 +13,10 @@ public class View extends JPanel {
 	private static final long serialVersionUID = 1L;
 	
 	Background background;
-	Frog frog;
 	Cast cast;
 
 	public View() {
 		background = new Background();
-		frog = new Frog();
 		cast = new Cast();
 	}
 
@@ -33,15 +32,17 @@ public class View extends JPanel {
 
 	@Override
 	public void paint(Graphics g) {
+		synchronized(cast) {
 		background.draw(g);
 		for (Sprite sprite: cast.castList) {
 			if(sprite instanceof Splat)
 			sprite.draw(g);
 		}	
-		frog.draw(g);
+		cast.frog.draw(g);
 		for (Sprite sprite: cast.castList) {
 			if(sprite instanceof Car)
 			sprite.draw(g);
+		}
 		}
 	}
 
