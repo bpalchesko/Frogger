@@ -64,24 +64,56 @@ public class Frogger extends JFrame{
 	        	System.out.println(e.getKeyCode());
 	        if(System.currentTimeMillis() - lastPress > 100) {
 				if (e.getKeyCode() == KeyEvent.VK_UP && !paused) {
-					view.cast.frog.orientation = Orientation.UP;
-					if (view.cast.frog.y > 110) view.cast.frog.y -= 34;
+					switch(view.cast.frog.orientation) {
+					case UP: if (view.cast.frog.y > 76) view.cast.frog.y -= 34;
+					break;
+					case DOWN: if (view.cast.frog.y < 280) view.cast.frog.y += 34;
+					break;
+					case LEFT: if (view.cast.frog.x > 23) view.cast.frog.x -= 35;
+					break;
+					case RIGHT: if (view.cast.frog.x < 665) view.cast.frog.x += 35;
+					break;
+					}
 					System.out.println(carCreator);
 					lastPress = System.currentTimeMillis();
 				}
 				if (e.getKeyCode() == KeyEvent.VK_DOWN && !paused) {
-					view.cast.frog.orientation = Orientation.DOWN;
-					if (view.cast.frog.y < 280) view.cast.frog.y += 34;
+					switch(view.cast.frog.orientation) {
+					case UP: view.cast.frog.orientation = Orientation.DOWN;
+					break;
+					case DOWN: view.cast.frog.orientation = Orientation.UP;
+					break;
+					case LEFT: view.cast.frog.orientation = Orientation.RIGHT;
+					break;
+					case RIGHT: view.cast.frog.orientation = Orientation.LEFT;
+					break;
+					}
 					lastPress = System.currentTimeMillis();
 				}
 				if (e.getKeyCode() == KeyEvent.VK_LEFT && !paused) {
-					view.cast.frog.orientation = Orientation.LEFT;
-					if (view.cast.frog.x > 23) view.cast.frog.x -= 35;
+					switch(view.cast.frog.orientation) {
+					case UP: view.cast.frog.orientation = Orientation.LEFT;
+					break;
+					case DOWN: view.cast.frog.orientation = Orientation.RIGHT;
+					break;
+					case LEFT: view.cast.frog.orientation = Orientation.DOWN;
+					break;
+					case RIGHT: view.cast.frog.orientation = Orientation.UP;
+					break;
+					}
 					lastPress = System.currentTimeMillis();
 				}
 				if (e.getKeyCode() == KeyEvent.VK_RIGHT && !paused) {
-					view.cast.frog.orientation = Orientation.RIGHT;
-					if (view.cast.frog.x < 665) view.cast.frog.x += 35;
+					switch(view.cast.frog.orientation) {
+					case UP: view.cast.frog.orientation = Orientation.RIGHT;
+					break;
+					case DOWN: view.cast.frog.orientation = Orientation.LEFT;
+					break;
+					case LEFT: view.cast.frog.orientation = Orientation.UP;
+					break;
+					case RIGHT: view.cast.frog.orientation = Orientation.DOWN;
+					break;
+					}
 					lastPress = System.currentTimeMillis();
 				}
 				if (e.getKeyCode() == 'P') {
@@ -184,7 +216,7 @@ public class Frogger extends JFrame{
 					livesLeft.setText("Frog lives: 0");
 				}
 			}
-			if (view.cast.frog.y <= 110) {
+			if (view.cast.frog.y <= 76) {
 				crossings++;
 				view.cast.frog = new Frog();
 			}
