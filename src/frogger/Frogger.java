@@ -25,6 +25,7 @@ public class Frogger extends JFrame{
 	int crossings;
 	int lives;
 	boolean paused;
+	//boolean gameOver;
 	JLabel levelNumber;
 	JLabel frogCrossings;
 	JLabel livesLeft;
@@ -37,10 +38,11 @@ public class Frogger extends JFrame{
 	CarCreator carCreator;
 	
 	public Frogger() {
-		carCreator = new CarCreator(this);
-		level = 1;
-		lives = 3;
-		paused = true;
+//		carCreator = new CarCreator(this);
+//		level = 1;
+//		lives = 3;
+//		paused = true;
+//		gameOver = false;
 	}
 	
 	public static void main(String[] args) {
@@ -50,6 +52,11 @@ public class Frogger extends JFrame{
 	}
 	
 	void runGame() {
+		//carCreator = new CarCreator(this);
+		level = 1;
+		lives = 3;
+		//gameOver = false;
+		paused = true;
 		setVisible(true);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		view.cast = new Cast();
@@ -84,6 +91,7 @@ public class Frogger extends JFrame{
 					if (view.frog.x < 665) view.frog.x += 35;
 				}
 				if (e.getKeyCode() == 'P') {
+					//if(gameOver) restart();
 					if(paused) resume();
 					else pause();
 				}
@@ -122,7 +130,7 @@ public class Frogger extends JFrame{
 	public void pause() {
 		paused = true;
 	    timer.cancel();
-	    System.out.println(paused);
+	    System.out.println("kkkkkkkkkk");
 	    directions.setText("Press P to Resume");
 	}
 	
@@ -135,12 +143,32 @@ public class Frogger extends JFrame{
 		directions.setText("Press P to Pause");
 	}
 	
+	void restart() {
+		carCreator = new CarCreator(this);
+		level = 1;
+		lives = 3;
+		paused = true;
+		view.cast = new Cast();
+		startLevel(view.cast);
+		directions.setText("Game over. Press P to replay");
+	}
+	
 	void startLevel(Cast cast) {
 		for(int i=0; i<4; i++) {
 		    view.cast.castList.add(new Car(i,this));
 		    //System.out.println(cast.castList.size());
 		}
 	}
+	
+//	void restart() {
+//		carCreator = new CarCreator(this);
+//		level = 1;
+//		lives = 3;
+//		paused = true;
+//		gameOver = false;
+//		createGame();
+//		runGame();
+//	}
 		
 	void updateGame() {
 		for(Sprite sprite: view.cast.castList) {
@@ -150,8 +178,15 @@ public class Frogger extends JFrame{
 		//System.out.println("Sprites" + view.cast.castList.size());
 	    if(view.cast.checkForCollision(view)) {
 	    	view.cast.castList.add(new Splat(view.frog.x+5, view.frog.y+5));
-	    	view.frog = new Frog();
 	    	lives--;
+	    	view.frog = new Frog();
+	    	if(lives < 1) {
+	    		lives = 3;
+	    		System.out.println("fuck");
+	    		pause();
+	    		restart();
+	    		
+	    	}
 	    }
 		livesLeft.setText("Frog lives: " + lives);
 		view.repaint();
