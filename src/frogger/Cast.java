@@ -2,23 +2,22 @@ package frogger;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.Random;
 
 public class Cast {
 
 	ArrayList<Sprite> castList;
-	Iterator<Sprite> iterator;
-	Iterator<Sprite> iterator2;
 	Frog frog;
 
 	public Cast() {
 		castList = new ArrayList<Sprite>();
 		frog = new Frog();
 		castList.add(frog);
-		iterator = castList.iterator();
-		iterator2 = castList.iterator();
+		
+		//iterator2 = castList.iterator();
 	}
 	
-	boolean checkForCollision(View view, Frogger frogger) {
+	synchronized boolean checkForCollision(View view, Frogger frogger) {
 		boolean collision = false;
 		
 		for (Sprite sprite : castList) {
@@ -36,32 +35,38 @@ public class Cast {
 		return collision;
 	}
 	
-	void addCar(Frogger frogger) {
+	synchronized void addCar(Frogger frogger) {
+		Random generator = new Random();
+		System.out.println(isSufficientCarInterval(frogger));
+		if(generator.nextInt(10) + frogger.level > 7 && isSufficientCarInterval(frogger)) {
 		 castList.add(new Car(frogger));
+		}
 		 //castList.add(1, new Car(frogger));
 	}
 	
-	void removeCar(Frogger frogger) {
-		for (Sprite sprite : castList) {
-			if (sprite.x < -75 || sprite.x > 775) { // Completely off the screen
-													// - only applies to cars
-				castList.remove(sprite);
-			}
-		}
-//		while (iterator.hasNext()) {
-//			Sprite sprite = iterator.next();
+	synchronized void removeCar(Frogger frogger) {
+		Iterator<Sprite> iterator = castList.iterator();
+//		for (Sprite sprite : castList) {
 //			if (sprite.x < -75 || sprite.x > 775) { // Completely off the screen
 //													// - only applies to cars
-//				iterator.remove();
+//				castList.remove(sprite);
 //			}
 //		}
+		while (iterator.hasNext()) {
+			Sprite sprite = iterator.next();
+			if (sprite.x < -100 || sprite.x > 800) { // Completely off the screen
+				System.out.println("removed car");		// - only applies to cars
+				iterator.remove();
+			}
+		}
+	}
+	
+	boolean isSufficientCarInterval(Frogger frogger) {
+		return (frogger.level > 3 || frogger.carInterval % 2 == 0);
 	}
 	
 	void updateCast(Frogger frogger) {
-		synchronized(this) {
 		addCar(frogger);
-		removeCar(frogger);
-		}
 	}
 	
 }
