@@ -238,8 +238,8 @@ public class Frogger extends JFrame {
 				view.cast.frog = new Frog();
 			}
 
-			level = crossings / 4;
-			level = crossings / 4 + 1;
+			//level = crossings / 4;
+			level = crossings / 5 + 1;
 			view.repaint();
 		}
 	}

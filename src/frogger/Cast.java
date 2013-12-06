@@ -62,7 +62,7 @@ public class Cast {
 	}
 	
 	boolean isSufficientCarInterval(Frogger frogger) {
-		return (frogger.level > 3 || frogger.carInterval % 2 == 0);
+		return (frogger.level > 2 || frogger.carInterval % 2 == 0);
 	}
 	
 	void updateCast(Frogger frogger) {
