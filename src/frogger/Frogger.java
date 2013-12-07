@@ -13,8 +13,6 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
-import frogger.Frog.Orientation;
-
 public class Frogger extends JFrame {
 
 	private static final long serialVersionUID = 1L;
@@ -51,91 +49,33 @@ public class Frogger extends JFrame {
 		paused = true;
 		setVisible(true);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
-		startLevel(view.cast);
+		placeCars(view.cast);
 
 		addKeyListener(new KeyListener() {
 			private long lastPress = 0;
 
 			@Override
 			public void keyPressed(KeyEvent e) {
-				if (System.currentTimeMillis() - lastPress > 100) {
+				if (System.currentTimeMillis() - lastPress > 120) {
 					if (e.getKeyCode() == KeyEvent.VK_UP && !paused) {
-						switch (view.cast.frog.orientation) {
-						case UP:
-							if (view.cast.frog.y > 76)
-								view.cast.frog.y -= 34;
-							break;
-						case DOWN:
-							if (view.cast.frog.y < 280)
-								view.cast.frog.y += 34;
-							break;
-						case LEFT:
-							if (view.cast.frog.x > 23)
-								view.cast.frog.x -= 35;
-							break;
-						case RIGHT:
-							if (view.cast.frog.x < 665)
-								view.cast.frog.x += 35;
-							break;
-						}
+						view.cast.frog.jump();
 						lastPress = System.currentTimeMillis();
 					}
 					if (e.getKeyCode() == KeyEvent.VK_DOWN && !paused) {
-						switch (view.cast.frog.orientation) {
-						case UP:
-							view.cast.frog.orientation = Orientation.DOWN;
-							break;
-						case DOWN:
-							view.cast.frog.orientation = Orientation.UP;
-							break;
-						case LEFT:
-							view.cast.frog.orientation = Orientation.RIGHT;
-							break;
-						case RIGHT:
-							view.cast.frog.orientation = Orientation.LEFT;
-							break;
-						}
+						view.cast.frog.reverse();
 						lastPress = System.currentTimeMillis();
 					}
 					if (e.getKeyCode() == KeyEvent.VK_LEFT && !paused) {
-						switch (view.cast.frog.orientation) {
-						case UP:
-							view.cast.frog.orientation = Orientation.LEFT;
-							break;
-						case DOWN:
-							view.cast.frog.orientation = Orientation.RIGHT;
-							break;
-						case LEFT:
-							view.cast.frog.orientation = Orientation.DOWN;
-							break;
-						case RIGHT:
-							view.cast.frog.orientation = Orientation.UP;
-							break;
-						}
+						view.cast.frog.counterclockwiseRotate();
 						lastPress = System.currentTimeMillis();
 					}
 					if (e.getKeyCode() == KeyEvent.VK_RIGHT && !paused) {
-						switch (view.cast.frog.orientation) {
-						case UP:
-							view.cast.frog.orientation = Orientation.RIGHT;
-							break;
-						case DOWN:
-							view.cast.frog.orientation = Orientation.LEFT;
-							break;
-						case LEFT:
-							view.cast.frog.orientation = Orientation.UP;
-							break;
-						case RIGHT:
-							view.cast.frog.orientation = Orientation.DOWN;
-							break;
-						}
+						view.cast.frog.clockwiseRotate();
 						lastPress = System.currentTimeMillis();
 					}
 					if (e.getKeyCode() == 'P') {
-						if (paused)
-							resume();
-						else
-							pause();
+						if (paused) resume();
+						else pause();
 						lastPress = System.currentTimeMillis();
 					}
 					view.cast.frog.update();
@@ -169,7 +109,6 @@ public class Frogger extends JFrame {
 		public void run() {
 			view.cast.updateCast(frogger);
 			carInterval++;
-			System.out.println("carInterval: " + carInterval);
 		}
 	}
 
@@ -184,7 +123,7 @@ public class Frogger extends JFrame {
 		timer = new Timer();
 		timer.schedule(new Strobe(), 0, 40);
 		carCreator = new CarCreator(this);
-		timer.schedule(carCreator, 0, 900);
+		timer.schedule(carCreator, 0, 450);
 		directions.setText("Press P to Pause");
 	}
 
@@ -196,11 +135,11 @@ public class Frogger extends JFrame {
 		lives = 3;
 		paused = true;
 		view.cast = new Cast();
-		startLevel(view.cast);
+		placeCars(view.cast);
 		directions.setText("Game over. Press P to replay");
 	}
 
-	void startLevel(Cast cast) {
+	void placeCars(Cast cast) {
 		synchronized (view.cast) {
 			for (int i = 0; i < 2; i++) {
 				view.cast.castList.add(new Car(i, 0, this));
@@ -211,37 +150,34 @@ public class Frogger extends JFrame {
 
 	void updateGame() {
 		synchronized (view.cast) {
-			for (Sprite sprite : view.cast.castList) {
-				sprite.update();
-				// System.out.println(sprite.x);
-			}
-		}
-		// System.out.println("Sprites" + view.cast.castList.size());
-		synchronized (view.cast) {
-			frogCrossings.setText("Total Frog Crossings: " + crossings);
-			levelNumber.setText("Level: " + level);
-			livesLeft.setText("Frog lives: " + lives);
-			if (view.cast.checkForCollision(view, this)) {
-				view.cast.castList.add(new Splat(view.cast.frog.x + 5,
-						view.cast.frog.y + 5));
-				lives--;
-				view.cast.frog = new Frog();
-				if (lives < 1) {
-					lives = 3;
-					pause();
-					restart();
-					livesLeft.setText("Frog lives: 0");
-				}
-			}
-			if (view.cast.frog.y <= 76) {
-				crossings++;
-				view.cast.frog = new Frog();
-			}
-
-			//level = crossings / 4;
+			updateText();
+			if (view.cast.checkForCollision(view, this)) frogDeath();
+			if (view.cast.frog.y <= 76) frogCrossing();
 			level = crossings / 5 + 1;
 			view.repaint();
 		}
+	}
+	
+	void frogDeath() {
+		view.cast.castList.add(new Splat(view.cast.frog.x + 5,
+				view.cast.frog.y + 5));
+		lives--;
+		if (lives < 1) {
+			pause();
+			restart();
+			livesLeft.setText("Frog lives: 0");
+		} else view.cast.frog = new Frog();
+	}
+	
+	void frogCrossing() {
+		crossings++;
+		view.cast.frog = new Frog();
+	}
+	
+	void updateText() {
+		frogCrossings.setText("Total Frog Crossings: " + crossings);
+		levelNumber.setText("Level: " + level);
+		livesLeft.setText("Frog lives: " + lives);
 	}
 
 	void createGame() {

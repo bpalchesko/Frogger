@@ -22,30 +22,27 @@ public class Car extends Sprite {
 		Random generator = new Random();
 		color = generator.nextInt(6);
 		this.lane = lane;
-		if(zone == 0) {
-		placeCarInLane(this.lane, color, frogger);
-		x = 100 + generator.nextInt(176); // place in the middle
+		if (zone == 0) {
+			placeCarInLane(this.lane, color, frogger);
+			x = 100 + generator.nextInt(176); // left half of street
 		} else {
-		placeCarInLane(this.lane, color, frogger);
-		x = 350 + generator.nextInt(176); // place in the middle
+			placeCarInLane(this.lane, color, frogger);
+			x = 350 + generator.nextInt(176); // right half of street
 		}
 		dy = 0;
 	}
 
 	void placeCarInLane(int lane, int color, Frogger frogger) {
-		switch (lane) {
-		case 0:
+		if (lane == 0) {
 			y = 150;
 			x = 775;
-			dx = -2*frogger.level;
+			dx = -2 * frogger.level;
 			carImage = View.loadImage(selectCarColor(color) + "-car-left.png");
-			break;
-		case 1:
+		} else {
 			y = 225;
 			x = -75;
-			dx = 2*frogger.level;
+			dx = 2 * frogger.level;
 			carImage = View.loadImage(selectCarColor(color) + "-car-right.png");
-			break;
 		}
 	}
 
@@ -74,9 +71,14 @@ public class Car extends Sprite {
 		return name;
 	}
 
+	void updateCarSpeed(Frogger frogger) {
+		if (lane == 0) dx = -2 * frogger.level;
+		else dx = 2 * frogger.level;
+	}
+
 	@Override
 	void update() {
-		x = x+dx;
+		x = x + dx;
 	}
 
 	@Override
