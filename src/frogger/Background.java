@@ -6,11 +6,8 @@ import java.awt.Image;
 
 /**
  * Loads the game's background image.
- * 
- * @author
- * 
+ * @author Brad Palchesko and Mike Junod
  */
-
 public class Background {
 
 	private Image backgroundImage;
@@ -19,6 +16,10 @@ public class Background {
 		this.backgroundImage = View.loadImage("FroggerBoard.jpg");
 	}
 
+	/**
+	 * Sets the size of the image equal to the view
+	 * @param g
+	 */
 	void draw(Graphics g) {
 		g.setColor(Color.WHITE);
 		g.fillRect(0, 0, g.getClipBounds().width, g.getClipBounds().height);

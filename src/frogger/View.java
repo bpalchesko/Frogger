@@ -6,6 +6,10 @@ import javax.swing.*;
 import java.io.File;
 import java.io.IOException;
 
+/**
+ * Creates a new view for the game background and sprites
+ * @author Brad Palchesko and Mike Junod
+ */
 public class View extends JPanel {
 
 	private static final long serialVersionUID = 1L;
@@ -13,11 +17,21 @@ public class View extends JPanel {
 	Background background;
 	Cast cast;
 
+	/**
+	 * Construct the view
+	 * @param cast
+	 */
 	public View(Cast cast) {
 		background = new Background();
 		this.cast = cast;
 	}
 
+	/**
+	 * Provide the name of a file under resources and this 
+	 * method will return the image
+	 * @param fileName
+	 * @return
+	 */
 	static Image loadImage(String fileName) {
 		Image img = null;
 		try {
@@ -27,7 +41,10 @@ public class View extends JPanel {
 		}
 		return img;
 	}
-
+	
+	/**
+	 * Prints the background and sprites to the view
+	 */	
 	@Override
 	public void paint(Graphics g) {
 		synchronized (cast) {

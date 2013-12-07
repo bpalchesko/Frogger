@@ -13,6 +13,10 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
+/**
+ * Controls the games GUI, timer, and gameplay
+ * @author Brad Palchesko and Mike Junod
+ */
 public class Frogger extends JFrame {
 
 	private static final long serialVersionUID = 1L;
@@ -33,16 +37,26 @@ public class Frogger extends JFrame {
 	Timer timer;
 	CarCreator carCreator;
 
+	/**
+	 * Creates the game
+	 */
 	public Frogger() {
 		view = new View(new Cast());
 	}
 
+	/**
+	 * Creates and runs the game
+	 * @param args
+	 */
 	public static void main(String[] args) {
 		Frogger frogger = new Frogger();
 		frogger.createGame();
 		frogger.runGame();
 	}
 
+	/**
+	 * Sets up initial game parameters and handles user input
+	 */
 	void runGame() {
 		level = 1;
 		lives = 3;
@@ -58,7 +72,7 @@ public class Frogger extends JFrame {
 			public void keyPressed(KeyEvent e) {
 				if (System.currentTimeMillis() - lastPress > 120) {
 					if (e.getKeyCode() == KeyEvent.VK_UP && !paused) {
-						view.cast.frog.jump();
+						view.cast.frog.hop();
 						lastPress = System.currentTimeMillis();
 					}
 					if (e.getKeyCode() == KeyEvent.VK_DOWN && !paused) {
@@ -93,12 +107,20 @@ public class Frogger extends JFrame {
 		});
 	}
 
+	/**
+	 * Controls all animation and game play
+	 * @author Brad Palchesko and Mike Junod
+	 */
 	private class Strobe extends TimerTask {
 		public void run() {
 			updateGame();
 		}
 	}
 
+	/**
+	 * Controls the creation of cars
+	 * @author Brad Palchesko and Mike Junod
+	 */
 	private class CarCreator extends TimerTask {
 		Frogger frogger;
 
@@ -112,21 +134,30 @@ public class Frogger extends JFrame {
 		}
 	}
 
+	/**
+	 * Pause the game
+	 */
 	public void pause() {
 		paused = true;
 		timer.cancel();
 		directions.setText("Press P to Resume");
 	}
-
+	
+	/**
+	 * Resume from pause
+	 */
 	public void resume() {
 		paused = false;
 		timer = new Timer();
 		timer.schedule(new Strobe(), 0, 40);
 		carCreator = new CarCreator(this);
-		timer.schedule(carCreator, 0, 450);
+		timer.schedule(carCreator, 100, 450); 
 		directions.setText("Press P to Pause");
 	}
 
+	/**
+	 * Restarts the game
+	 */
 	void restart() {
 		carCreator = new CarCreator(this);
 		carInterval = 0;
@@ -138,7 +169,11 @@ public class Frogger extends JFrame {
 		placeCars(view.cast);
 		directions.setText("Game over. Press P to replay");
 	}
-
+	
+	/**
+	 * Places cars at start of game so board is not wide open
+	 * @param cast
+	 */
 	void placeCars(Cast cast) {
 		synchronized (view.cast) {
 			for (int i = 0; i < 2; i++) {
@@ -148,6 +183,10 @@ public class Frogger extends JFrame {
 		}
 	}
 
+	/**
+	 * Updates the text on the GUI and checks for successful crossings
+	 * or deaths
+	 */
 	void updateGame() {
 		synchronized (view.cast) {
 			updateText();
@@ -158,6 +197,10 @@ public class Frogger extends JFrame {
 		}
 	}
 	
+	/**
+	 * Places a splat and decreases lives or ends the game in the event
+	 * of a collision.
+	 */
 	void frogDeath() {
 		view.cast.castList.add(new Splat(view.cast.frog.x + 5,
 				view.cast.frog.y + 5));
@@ -169,17 +212,26 @@ public class Frogger extends JFrame {
 		} else view.cast.frog = new Frog();
 	}
 	
+	/**
+	 * Increments successful frog crossing and sets frog back to the start
+	 */
 	void frogCrossing() {
 		crossings++;
 		view.cast.frog = new Frog();
 	}
 	
+	/**
+	 * Updates text on the screen
+	 */
 	void updateText() {
 		frogCrossings.setText("Total Frog Crossings: " + crossings);
 		levelNumber.setText("Level: " + level);
 		livesLeft.setText("Frog lives: " + lives);
 	}
 
+	/**
+	 * Creates game GUI
+	 */
 	void createGame() {
 		setSize(700, 600);
 		setResizable(false);
@@ -193,11 +245,17 @@ public class Frogger extends JFrame {
 		addBottomBar();
 	}
 
+	/**
+	 * Places game play view in the middle of the screen
+	 */
 	void addView() {
 		view.setPreferredSize(new Dimension(700, 600));
 		add(view, BorderLayout.CENTER);
 	}
-
+	
+	/**
+	 * Holds frog crossings and level number
+	 */
 	void addTopBar() {
 		topBar = new JPanel();
 		topBar.setLayout(new BorderLayout());
@@ -207,7 +265,10 @@ public class Frogger extends JFrame {
 		topBar.add(frogCrossings, BorderLayout.EAST);
 		add(topBar, BorderLayout.NORTH);
 	}
-
+	
+	/**
+	 * Holds lives remaining lives and pause direction
+	 */
 	void addBottomBar() {
 		bottomBar = new JPanel();
 		bottomBar.setLayout(new BorderLayout());
@@ -217,14 +278,20 @@ public class Frogger extends JFrame {
 		bottomBar.add(directions, BorderLayout.EAST);
 		add(bottomBar, BorderLayout.SOUTH);
 	}
-
+	
+	/**
+	 * Displays level number 
+	 */
 	void addLevelNumber() {
 		levelNumber = new JLabel("Level: " + level, SwingConstants.CENTER);
 		levelNumber.setPreferredSize(new Dimension(200, 75));
 		levelNumber.setBackground(Color.black);
 		levelNumber.setForeground(Color.white);
 	}
-
+	
+	/**
+	 * Displays successful frog crossings
+	 */
 	void addFrogCrossings() {
 		frogCrossings = new JLabel("Total Frog Crossings: " + crossings,
 				SwingConstants.CENTER);
@@ -233,13 +300,19 @@ public class Frogger extends JFrame {
 		frogCrossings.setForeground(Color.white);
 	}
 
+	/**
+	 * Displays remaining lives 
+	 */
 	void addLivesLeft() {
 		livesLeft = new JLabel("Frog lives: " + lives, SwingConstants.CENTER);
 		livesLeft.setPreferredSize(new Dimension(200, 75));
 		livesLeft.setBackground(Color.black);
 		livesLeft.setForeground(Color.white);
 	}
-
+	
+	/**
+	 * Displays the pause/resume option
+	 */
 	void addDirections() {
 		directions = new JLabel("Press P to Play", SwingConstants.CENTER);
 		directions.setPreferredSize(new Dimension(250, 75));

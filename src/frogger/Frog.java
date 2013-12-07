@@ -3,17 +3,23 @@ package frogger;
 import java.awt.Graphics;
 import java.awt.Image;
 
+/**
+ * Creates the frog and loads appropriate images
+ * @author Brad Palchesko and Mike Junod
+ */
 public class Frog extends Sprite {
-
+	
 	enum Orientation {UP, RIGHT, DOWN, LEFT };
 	Orientation orientation;
 	Image frogUpImage;
 	Image frogDownImage;
 	Image frogLeftImage;
 	Image frogRightImage;
-	Image frogHoppingUpImage;
 	Image frogImage;
 	
+	/**
+	 * Creates frog at starting position and loads images
+	 */
 	public Frog() {
 		x = 350;
 		y = 280;
@@ -25,6 +31,11 @@ public class Frog extends Sprite {
 		frogImage = selectFrogImage(orientation);
 	}
 	
+	/**
+	 * Selects frog image based on orientation
+	 * @param orientation
+	 * @return
+	 */
 	Image selectFrogImage(Orientation orientation) {
 		Image frogImage = null;
 		switch(orientation) {
@@ -44,7 +55,10 @@ public class Frog extends Sprite {
 		return frogImage;
 	}
 	
-	void jump() {
+	/**
+	 * Specifies the change of position for each frog movement
+	 */
+	void hop() {
 		switch (orientation) {
 		case UP:
 			if (y > 76) y -= 34;
@@ -61,6 +75,9 @@ public class Frog extends Sprite {
 		}
 	}
 	
+	/**
+	 * Reverse the frog's direction (180 degrees)
+	 */
 	void reverse() {
 		switch (orientation) {
 		case UP:
@@ -78,6 +95,10 @@ public class Frog extends Sprite {
 		}
 	}
 	
+	
+	/**
+	 * Handles 90 degree rotations counterclockwise
+	 */
 	void counterclockwiseRotate() {
 		switch (orientation) {
 		case UP:
@@ -95,6 +116,9 @@ public class Frog extends Sprite {
 		}
 	}
 	
+	/**
+	 * Handles 90 degree clockwise rotations
+	 */
 	void clockwiseRotate() {
 		switch (orientation) {
 		case UP:
@@ -112,11 +136,17 @@ public class Frog extends Sprite {
 		}
 	}
 	
+	/**
+	 * Update frog image
+	 */
 	@Override
 	void update() {
 		frogImage = selectFrogImage(orientation);
 	}
 
+	/**
+	 * Draws the frog image
+	 */
 	@Override
 	void draw(Graphics g) {
         g.drawImage(frogImage, x, y, null);
