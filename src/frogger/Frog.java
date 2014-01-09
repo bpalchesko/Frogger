@@ -9,13 +9,22 @@ import java.awt.Image;
  */
 public class Frog extends Sprite {
 	
-	enum Orientation {UP, RIGHT, DOWN, LEFT };
+	enum Orientation {
+		UP("up"), RIGHT("right"), DOWN("down"), LEFT("left");
+		
+		String name;
+		Image facing;
+		Image hopping;
+		
+		private Orientation(String name) {
+			this.name = name;
+			facing = View.loadImage("facing-" + name +".png");
+			hopping = View.loadImage("hopping-" + name +".png");
+		}
+	};
 	Orientation orientation;
-	Image frogUpImage;
-	Image frogDownImage;
-	Image frogLeftImage;
-	Image frogRightImage;
 	Image frogImage;
+	int animationFrame;
 	
 	/**
 	 * Creates frog at starting position and loads images
@@ -24,11 +33,8 @@ public class Frog extends Sprite {
 		x = 350;
 		y = 280;
 		orientation = Orientation.UP;
-		frogUpImage = View.loadImage("frog-up.png");
-		frogDownImage = View.loadImage("frog-down.png");
-		frogLeftImage = View.loadImage("frog-left.png");
-		frogRightImage = View.loadImage("frog-right.png");
-		frogImage = selectFrogImage(orientation);
+		frogImage = selectFrogImage();
+		animationFrame = 0;
 	}
 	
 	/**
@@ -36,44 +42,41 @@ public class Frog extends Sprite {
 	 * @param orientation
 	 * @return
 	 */
-	Image selectFrogImage(Orientation orientation) {
-		Image frogImage = null;
-		switch(orientation) {
-		case UP:
-			frogImage = frogUpImage;
-			break;
-		case DOWN:
-			frogImage = frogDownImage;
-			break;
-		case LEFT:
-			frogImage = frogLeftImage;
-			break;
-		case RIGHT:
-			frogImage = frogRightImage;
-			break;
+	Image selectFrogImage() {
+		if (animationFrame == 0 || animationFrame == 3 || animationFrame == 4) {
+			return orientation.facing;
+		} else {
+			return orientation.hopping;
 		}
-		return frogImage;
 	}
 	
 	/**
 	 * Specifies the change of position for each frog movement
 	 */
 	void hop() {
+		frogImage = selectFrogImage();
+		int hopDistance;
+		if (animationFrame == 3) hopDistance = 6;
+		else hopDistance = 7;
 		switch (orientation) {
 		case UP:
-			if (y > 76) y -= 34;
+			if (y > 76) y -= hopDistance;
 			break;
 		case DOWN:
-			if (y < 280) y += 34;
+			if (y < 280) y += hopDistance;
 			break;
 		case LEFT:
-			if (x > 23) x -= 35;
+			if (x > 23) x -= 7;
 			break;
 		case RIGHT:
-			if (x < 665) x += 35;
+			if (x < 665) x += 7;
 			break;
 		}
+		if(animationFrame < 5) animationFrame++;
+		else animationFrame = 0;
 	}
+	
+	
 	
 	/**
 	 * Reverse the frog's direction (180 degrees)
@@ -141,7 +144,8 @@ public class Frog extends Sprite {
 	 */
 	@Override
 	void update() {
-		frogImage = selectFrogImage(orientation);
+		frogImage = selectFrogImage();
+		if(animationFrame > 0) hop();
 	}
 
 	/**

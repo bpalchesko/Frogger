@@ -70,9 +70,10 @@ public class Frogger extends JFrame {
 
 			@Override
 			public void keyPressed(KeyEvent e) {
-				if (System.currentTimeMillis() - lastPress > 120) {
+				if (System.currentTimeMillis() - lastPress > 150) { // was >120
 					if (e.getKeyCode() == KeyEvent.VK_UP && !paused) {
-						view.cast.frog.hop();
+						//view.cast.frog.hop();
+						view.cast.frog.animationFrame = 1;
 						lastPress = System.currentTimeMillis();
 					}
 					if (e.getKeyCode() == KeyEvent.VK_DOWN && !paused) {
@@ -209,7 +210,10 @@ public class Frogger extends JFrame {
 			pause();
 			restart();
 			livesLeft.setText("Frog lives: 0");
-		} else view.cast.frog = new Frog();
+		} else {
+			view.cast.frog = new Frog();
+			view.cast.castList.add(view.cast.frog);
+		}
 	}
 	
 	/**
@@ -218,6 +222,7 @@ public class Frogger extends JFrame {
 	void frogCrossing() {
 		crossings++;
 		view.cast.frog = new Frog();
+		view.cast.castList.add(view.cast.frog); //why does this fix frame animation back to zero?
 	}
 	
 	/**
