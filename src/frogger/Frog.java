@@ -30,8 +30,8 @@ public class Frog extends Sprite {
 	 * Creates frog at starting position and loads images
 	 */
 	public Frog() {
-		x = 350;
-		y = 280;
+		x = 320; //was 350
+		y = 220; //was 280
 		orientation = Orientation.UP;
 		frogImage = selectFrogImage();
 		animationFrame = 0;
@@ -55,21 +55,18 @@ public class Frog extends Sprite {
 	 */
 	void hop() {
 		frogImage = selectFrogImage();
-		int hopDistance;
-		if (animationFrame == 3) hopDistance = 6;
-		else hopDistance = 7;
 		switch (orientation) {
 		case UP:
-			if (y > 76) y -= hopDistance;
+			if (y > 35) y -= 7;
 			break;
 		case DOWN:
-			if (y < 280) y += hopDistance;
+			if (y < 280) y += 7;
 			break;
 		case LEFT:
-			if (x > 23) x -= 7;
+			if (x > 20) x -= 7;
 			break;
 		case RIGHT:
-			if (x < 665) x += 7;
+			if (x < 600) x += 7;
 			break;
 		}
 		if(animationFrame < 5) animationFrame++;

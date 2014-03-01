@@ -56,12 +56,12 @@ public class Car extends Sprite {
 	 */
 	void placeCarInLane(int lane, int color, Frogger frogger) {
 		if (lane == 0) {
-			y = 150;
+			y = 87;
 			x = 775;
 			dx = -2 * frogger.level;
 			carImage = View.loadImage(selectCarColor(color) + "-car-left.png");
 		} else {
-			y = 225;
+			y = 157;
 			x = -75;
 			dx = 2 * frogger.level;
 			carImage = View.loadImage(selectCarColor(color) + "-car-right.png");

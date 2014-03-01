@@ -13,7 +13,8 @@ public class Background {
 	private Image backgroundImage;
 
 	public Background() {
-		this.backgroundImage = View.loadImage("FroggerBoard.jpg");
+		//this.backgroundImage = View.loadImage("FroggerBoard.jpg");
+		backgroundImage = View.loadImage("GGLevel1.jpg");
 	}
 
 	/**

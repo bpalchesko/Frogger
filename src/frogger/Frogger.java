@@ -192,7 +192,7 @@ public class Frogger extends JFrame {
 		synchronized (view.cast) {
 			updateText();
 			if (view.cast.checkForCollision(view, this)) frogDeath();
-			if (view.cast.frog.y <= 76) frogCrossing();
+			if (view.cast.frog.y <= 40) frogCrossing();
 			level = crossings / 5 + 1;
 			view.repaint();
 		}
@@ -238,7 +238,7 @@ public class Frogger extends JFrame {
 	 * Creates game GUI
 	 */
 	void createGame() {
-		setSize(700, 600);
+		setSize(640, 360); //was 700, 600
 		setResizable(false);
 		setLayout(new BorderLayout());
 		addView();
@@ -248,13 +248,14 @@ public class Frogger extends JFrame {
 		addDirections();
 		addTopBar();
 		addBottomBar();
+		pack(); //sizes frame accurately
 	}
 
 	/**
 	 * Places game play view in the middle of the screen
 	 */
 	void addView() {
-		view.setPreferredSize(new Dimension(700, 600));
+		view.setPreferredSize(new Dimension(640, 280)); // was 700, 600
 		add(view, BorderLayout.CENTER);
 	}
 	
@@ -264,7 +265,7 @@ public class Frogger extends JFrame {
 	void addTopBar() {
 		topBar = new JPanel();
 		topBar.setLayout(new BorderLayout());
-		topBar.setPreferredSize(new Dimension(700, 75));
+		topBar.setPreferredSize(new Dimension(640, 40)); //was 700, 75
 		topBar.setBackground(Color.black);
 		topBar.add(levelNumber, BorderLayout.WEST);
 		topBar.add(frogCrossings, BorderLayout.EAST);
@@ -277,7 +278,7 @@ public class Frogger extends JFrame {
 	void addBottomBar() {
 		bottomBar = new JPanel();
 		bottomBar.setLayout(new BorderLayout());
-		bottomBar.setPreferredSize(new Dimension(700, 75));
+		bottomBar.setPreferredSize(new Dimension(640, 40)); //was 700, 75
 		bottomBar.setBackground(Color.black);
 		bottomBar.add(livesLeft, BorderLayout.WEST);
 		bottomBar.add(directions, BorderLayout.EAST);
@@ -289,7 +290,7 @@ public class Frogger extends JFrame {
 	 */
 	void addLevelNumber() {
 		levelNumber = new JLabel("Level: " + level, SwingConstants.CENTER);
-		levelNumber.setPreferredSize(new Dimension(200, 75));
+		levelNumber.setPreferredSize(new Dimension(200, 40)); //was 200, 75
 		levelNumber.setBackground(Color.black);
 		levelNumber.setForeground(Color.white);
 	}
@@ -300,7 +301,7 @@ public class Frogger extends JFrame {
 	void addFrogCrossings() {
 		frogCrossings = new JLabel("Total Frog Crossings: " + crossings,
 				SwingConstants.CENTER);
-		frogCrossings.setPreferredSize(new Dimension(250, 75));
+		frogCrossings.setPreferredSize(new Dimension(250, 40)); //was 250, 75
 		frogCrossings.setBackground(Color.black);
 		frogCrossings.setForeground(Color.white);
 	}
@@ -310,7 +311,7 @@ public class Frogger extends JFrame {
 	 */
 	void addLivesLeft() {
 		livesLeft = new JLabel("Frog lives: " + lives, SwingConstants.CENTER);
-		livesLeft.setPreferredSize(new Dimension(200, 75));
+		livesLeft.setPreferredSize(new Dimension(200, 40)); //was 200, 75
 		livesLeft.setBackground(Color.black);
 		livesLeft.setForeground(Color.white);
 	}
@@ -320,7 +321,7 @@ public class Frogger extends JFrame {
 	 */
 	void addDirections() {
 		directions = new JLabel("Press P to Play", SwingConstants.CENTER);
-		directions.setPreferredSize(new Dimension(250, 75));
+		directions.setPreferredSize(new Dimension(250, 40)); //was 250, 75
 		directions.setBackground(Color.black);
 		directions.setForeground(Color.white);
 	}
