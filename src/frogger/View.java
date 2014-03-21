@@ -35,7 +35,8 @@ public class View extends JPanel {
 	static Image loadImage(String fileName) {
 		Image img = null;
 		try {
-			img = ImageIO.read(new File("resources/" + fileName));
+			//img = ImageIO.read(new File("resources/" + fileName));
+			img = ImageIO.read(ResourceLoader.load(fileName));
 		} catch (IOException exc) {
 			System.out.println("Can't load image.");
 		}
